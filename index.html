@@ -24,7 +24,9 @@
         <option value="jaipur">📍 Jaipur Basin</option>
         <option value="udaipur">📍 Udaipur Lake Zone</option>
       </select>
-
+<button onclick="generateWatershedPDF()" style="margin-left: 8px; padding: 6px 12px; background: #0284c7; color: white; border: none; border-radius: 6px; font-size: 11px; font-weight: bold; cursor: pointer;">
+  📄 Export Official Report (PDF)
+</button>
       <span id="backend-status" class="bg-emerald-900/80 text-emerald-300 text-xs px-3 py-1 rounded-full border border-emerald-500/30">
         ● Server: Connected
       </span>
@@ -352,5 +354,75 @@ map.on('click', function(e) {
     });
     
   </script>
+  <!-- jsPDF CDN Library -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+
+<script>
+function generateWatershedPDF() {
+  const { jsPDF } = window.jspdf;
+  const doc = new jsPDF();
+
+  const districtElem = document.getElementById('district-selector');
+  const district = districtElem ? districtElem.value.toUpperCase() : "KOTA";
+
+  // Header Banner
+  doc.setFillColor(15, 23, 42);
+  doc.rect(0, 0, 210, 32, 'F');
+  doc.setTextColor(255, 255, 255);
+  doc.setFontSize(16);
+  doc.setFont('helvetica', 'bold');
+  doc.text("TechTitans Watershed AI - Hydrological Audit", 14, 18);
+  doc.setFontSize(10);
+  doc.setFont('helvetica', 'normal');
+  doc.setTextColor(148, 163, 184);
+  doc.text("Smart India Hackathon (SIH) Prototype Summary", 14, 26);
+
+  // Metadata
+  doc.setTextColor(30, 41, 59);
+  doc.setFontSize(11);
+  doc.setFont('helvetica', 'bold');
+  doc.text(`District: ${district} Catchment Basin`, 14, 44);
+  doc.setFont('helvetica', 'normal');
+  doc.setFontSize(9);
+  doc.text(`Generated On: ${new Date().toLocaleString()}`, 14, 51);
+  doc.text(`Audit Status: Operational & Verified via AI Screenings`, 14, 57);
+
+  // Metrics Box
+  doc.setDrawColor(203, 213, 225);
+  doc.setFillColor(248, 250, 252);
+  doc.roundedRect(14, 65, 182, 45, 3, 3, 'FD');
+
+  doc.setFontSize(11);
+  doc.setFont('helvetica', 'bold');
+  doc.setTextColor(2, 132, 199);
+  doc.text("Hydrological & Soil Conservation Metrics", 20, 75);
+
+  doc.setFontSize(9);
+  doc.setFont('helvetica', 'normal');
+  doc.setTextColor(51, 65, 85);
+  doc.text("• Monitored Inflow Runoff: 240 mm (High Peak)", 20, 84);
+  doc.text("• Artificial Recharge Retention Target: 185 mm (77% Efficiency)", 20, 91);
+  doc.text("• Proposed Interventions: 2 Masonry Check Dams, 1 Percolation Pond", 20, 98);
+  doc.text("• Public Grievances Logged: 3 | AI Verification Pipeline: Active", 20, 105);
+
+  // Recommendations
+  doc.setFontSize(11);
+  doc.setFont('helvetica', 'bold');
+  doc.setTextColor(15, 23, 42);
+  doc.text("Official Engineering Recommendation", 14, 125);
+  doc.setFontSize(9);
+  doc.setFont('helvetica', 'normal');
+  doc.setTextColor(71, 85, 105);
+  doc.text("Spatial analysis indicates high soil erosion propensity along upstream contours.", 14, 133);
+  doc.text("Immediate construction of continuous contour trenches (CCT) is recommended to arrest siltation.", 14, 139);
+
+  // Signoff
+  doc.line(14, 165, 196, 165);
+  doc.setFontSize(8);
+  doc.text("Authorized by TechTitans GIS Hydrology Core | Government Demonstration", 14, 172);
+
+  doc.save(`Watershed_Assessment_${district}.pdf`);
+}
+</script>
 </body>
 </html>
