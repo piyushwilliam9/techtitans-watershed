@@ -91,6 +91,38 @@
           + Upload & Verify Field Proof
         </button>
       </div>
+      <!-- Runoff Analytics Chart -->
+<div style="margin-top: 10px; padding: 10px; background: rgba(15, 23, 42, 0.9); border: 1px solid #334155; border-radius: 8px;">
+  <div style="font-size: 11px; font-weight: bold; color: #38bdf8; text-transform: uppercase; margin-bottom: 6px;">
+    📊 Runoff vs. Retention (mm)
+  </div>
+  <canvas id="runoffChart" style="max-height: 140px;"></canvas>
+</div>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+  window.addEventListener('DOMContentLoaded', () => {
+    const ctx = document.getElementById('runoffChart').getContext('2d');
+    new Chart(ctx, {
+      type: 'bar',
+      data: {
+        labels: ["Kota", "Jodhpur", "Udaipur", "Ajmer", "Bikaner"],
+        datasets: [
+          { label: 'Runoff', data: [240, 110, 195, 160, 85], backgroundColor: '#38bdf8' },
+          { label: 'Retained', data: [185, 75, 140, 110, 60], backgroundColor: '#10b981' }
+        ]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: { legend: { labels: { color: '#cbd5e1', font: { size: 9 } } } },
+        scales: {
+          x: { ticks: { color: '#94a3b8', font: { size: 9 } } },
+          y: { beginAtZero: true, ticks: { color: '#94a3b8', font: { size: 9 } } }
+        }
+      }
+    });
+  });
+</script>
 
     </aside>
 
