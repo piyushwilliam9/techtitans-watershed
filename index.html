@@ -146,7 +146,37 @@
     const satelliteLayer = L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', {
       attribution: 'Esri Satellite'
     }).addTo(map);
+// --- Hydrological Overlays & Layer Controls ---
+const streamLayer = L.layerGroup([
+  L.polyline([[25.18, 75.83], [25.195, 75.845], [25.21, 75.86]], { color: '#0ea5e9', weight: 4, opacity: 0.85 }),
+  L.polyline([[25.17, 75.81], [25.185, 75.83], [25.20, 75.835]], { color: '#38bdf8', weight: 3, dashArray: '5, 5' })
+]);
 
+const catchmentRidge = L.polygon([
+  [25.16, 75.80],
+  [25.23, 75.82],
+  [25.24, 75.89],
+  [25.17, 75.88]
+], { color: '#f59e0b', weight: 2, fillOpacity: 0.1, dashArray: '6, 6' });
+
+const proposedDams = L.layerGroup([
+  L.circleMarker([25.195, 75.845], { radius: 7, fillColor: '#10b981', color: '#fff', weight: 2, fillOpacity: 0.9 })
+    .bindPopup("<b>Proposed Check Dam #4</b><br>Percolation Potential: High (94%)"),
+  L.circleMarker([25.185, 75.83], { radius: 7, fillColor: '#10b981', color: '#fff', weight: 2, fillOpacity: 0.9 })
+    .bindPopup("<b>Proposed Percolation Pond #2</b><br>Storage: 45,000 L")
+]);
+
+streamLayer.addTo(map);
+catchmentRidge.addTo(map);
+proposedDams.addTo(map);
+
+const watershedLayers = {
+  "🌊 Drainage Streams": streamLayer,
+  "⛰️ Catchment Ridge": catchmentRidge,
+  "📍 AI Proposed Dams": proposedDams
+};
+
+L.control.layers(null, watershedLayers, { position: 'topright', collapsed: false }).addTo(map);
     const streetLayer = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
       attribution: 'OSM'
     });
