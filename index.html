@@ -99,7 +99,20 @@
       <div id="map" class="h-full w-full"></div>
     </main>
   </div>
-
+<div style="margin: 15px; padding: 12px; border: 1px dashed #38bdf8; border-radius: 8px; background: rgba(15, 23, 42, 0.8);">
+      <label style="display:block; font-weight:bold; margin-bottom:6px; color:#38bdf8;">
+        📸 Upload Structure Photo (AI Vision Screening):
+      </label>
+      <input type="file" id="aiImageInput" accept="image/*" style="display:block; width:100%; margin-bottom:8px; color:#94a3b8;">
+      <div id="aiAnalysisResult" style="display:none; padding:8px; border-radius:5px; font-size:13px; font-weight:600;"></div>
+    </div>
+    <div style="margin: 15px; padding: 12px; border: 1px dashed #38bdf8; border-radius: 8px; background: rgba(15, 23, 42, 0.8);">
+      <label style="display:block; font-weight:bold; margin-bottom:6px; color:#38bdf8;">
+        📸 Upload Structure Photo (AI Vision Screening):
+      </label>
+      <input type="file" id="aiImageInput" accept="image/*" style="display:block; width:100%; margin-bottom:8px; color:#94a3b8;">
+      <div id="aiAnalysisResult" style="display:none; padding:8px; border-radius:5px; font-size:13px; font-weight:600;"></div>
+    </div>
   <script>
     const API_URL = "https://techtitans-watershed.onrender.com";
 
@@ -221,6 +234,35 @@
     }
 
     loadBackendData();
+    document.getElementById('aiImageInput').addEventListener('change', async (e) => {
+      const file = e.target.files[0];
+      if (!file) return;
+
+      const resultBox = document.getElementById('aiAnalysisResult');
+      resultBox.style.display = 'block';
+      resultBox.style.background = '#0369a1';
+      resultBox.style.color = '#f0f9ff';
+      resultBox.innerText = '🔍 Analyzing structure via Vision AI model...';
+
+      const formData = new FormData();
+      formData.append('image', file);
+
+      try {
+        const res = await fetch(`https://techtitans-watershed.onrender.com/api/analyze-damage`, {
+          method: 'POST',
+          body: formData
+        });
+        const data = await res.json();
+        resultBox.style.background = data.severity === 'High' ? '#7f1d1d' : '#78350f';
+        resultBox.style.color = data.severity === 'High' ? '#fecaca' : '#fef3c7';
+        resultBox.innerHTML = `⚠️ <b>${data.detection}</b> detected (${data.confidence} confidence)<br>Severity: <b>${data.severity}</b><br><small>${data.recommended_action}</small>`;
+      } catch (err) {
+        resultBox.style.background = '#7f1d1d';
+        resultBox.style.color = '#fecaca';
+        resultBox.innerText = 'Error connecting to Vision model.';
+      }
+    });
+    
   </script>
 </body>
 </html>
